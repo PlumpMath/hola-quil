@@ -32,7 +32,9 @@
           (q/line (* inner-r (q/cos (+ skew1 a)))
                   (* inner-r (q/sin (+ skew1 a)))
                   (* outer-r (q/cos (+ skew2 a)))
-                  (* outer-r (q/sin (+ skew2 a)))))))))
+                  (* outer-r (q/sin (+ skew2 a))))))))
+
+  )
 
 (q/defsketch emerald
    :host "canvas"

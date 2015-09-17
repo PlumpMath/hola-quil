@@ -7,55 +7,64 @@
   ))
 
 
-(defn stats
-  "Take a map {:xs xs} and return a map of simple statistics on xs"
-  [{:keys [xs] :as m}]
-  (assert (contains? m :xs))
-  (let [n  (count xs)
-        m  (/ (p/sum identity xs) n)
-        m2 (/ (p/sum #(* % %) xs) n)
-        v  (- m2 (* m m))]
-    {:n n   ; count
-     :m m   ; mean
-     :m2 m2 ; mean-square
-     :v v   ; variance
-     }))
 
+(def spiro-graph
+  {:w (p/fnk [wx] wx)
+   :h (p/fnk [hx] hx)
+   :sep-borde (p/fnk [] 30)
+   :half-w (p/fnk [w] (/ w 2))
+   :half-h (p/fnk [h] (/ h 2))
+   :outer-r (p/fnk [half-w sep-borde] (- half-w sep-borde))
+   :inner-r (p/fnk [outer-r] (* outer-r 0.5))
+   :str-w (p/fnk [sw] sw)
 
-(stats {:xs [4 6 5 3 7]})
+   }
+  )
 
-(def stats-graph
-  "A graph specifying the same computation as 'stats'"
-  {:n  (p/fnk [xs]   (count xs))
-   :m  (p/fnk [xs n] (/ (p/sum identity xs) n))
-   :m2 (p/fnk [xs n] (/ (p/sum #(* % %) xs) n))
-   :v  (p/fnk [m m2] (- m2 (* m m)))})
-
-(def stats-eager (g/compile stats-graph))
-
-(stats-eager {:xs [4 6 5 3 7]})
+(def spiro-graph-eager (g/compile spiro-graph))
 
 
 
 
-#_(defn setup []
+
+
+(defn setup []
   (q/frame-rate 60))
 
 
-#_(defn draw []
-   (q/background 255)
+(defn draw []
+  (q/background 255)
+
+
+  (def out (spiro-graph-eager {:wx (q/width)
+                               :hx (q/height)
+
+                               :sw 1}))
+
+  ;; q/width y q/height no tienen valor hasta que size es llamado.
+  ;; Si no los pongo dentro del draw no funcionan.
+
+
+  (q/stroke 0)
+  (q/stroke-weight (:str-w out))
+
+
+
+
+  (q/ellipse (:half-w out) (:half-h out) (* 2 (:outer-r out)) (* 2 (:outer-r out)))
+
   )
 
 
 
+*ns*
 
 
 
 
 
 
-
-#_(q/defsketch spirograph
+(q/defsketch spirograph
    :host "canvas"
    :size [500 500]
    :setup setup

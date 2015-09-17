@@ -4,7 +4,7 @@
 
 (defn setup []
   (q/frame-rate 60)
-  ;;(q/no-cursor)
+ ;; (q/no-cursor)
   )
 
 ;; (def slider 0)
@@ -20,24 +20,27 @@
         h (q/height)
         hw (/ w 2)
         hh (/ h 2)
-        inner-r (* hh 0.5)
+        inner-r (* hw 0.5)
         outer-r (- hh 20)
-        num-barras 720
-        ]
+        sw 1.2
+        n 300
+        cur 600]
 
-    (q/fill 255)
     (q/stroke 0)
-    (q/stroke-weight 1)
-
+    (q/fill 0)
+    (q/text "emerald3" 10 20)
+    (q/text-num sw 10 40)
+    (q/text-num n 10 60)
+    (q/text-num cur 10 80)
+    (q/stroke-weight sw)
     (q/with-translation [hw hh]
-      (doseq [a (range 0 q/TWO-PI (/ q/TWO-PI num-barras))]
-        (let [skew1 (* (/ num-barras 1000) (q/mouse-x)   a)
+      (doseq [a (range 0 q/TWO-PI (/ q/PI n))] ;; el numero de barras es nx2. Siempre es par
+        (let [skew1 (* cur a)
               skew2 (* skew1 2.0)]
           (q/line (* inner-r (q/cos (+ skew1 a)))
                   (* inner-r (q/sin (+ skew1 a)))
-                  (* outer-r (q/cos (+ skew2 a)))    ;; Las coordenadas exteriores van al doble de velocidad que las interiores
-                  (* outer-r (q/sin (+ skew2 a))))
-          ))))
+                  (* outer-r (q/cos (+ skew2 a)))
+                  (* outer-r (q/sin (+ skew2 a))))))))
   )
 
 (defn draw []
