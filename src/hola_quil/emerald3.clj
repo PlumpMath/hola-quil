@@ -4,6 +4,7 @@
 
 (defn setup []
   (q/frame-rate 60)
+  (q/color-mode :hsb )
  ;; (q/no-cursor)
   )
 
@@ -24,9 +25,8 @@
         outer-r (- hh 20)
         sw 1.2
         n 300
-        cur 600]
+        cur 150]
 
-    (q/stroke 0)
     (q/fill 0)
     (q/text "emerald3" 10 20)
     (q/text-num sw 10 40)
@@ -35,8 +35,9 @@
     (q/stroke-weight sw)
     (q/with-translation [hw hh]
       (doseq [a (range 0 q/TWO-PI (/ q/PI n))] ;; el numero de barras es nx2. Siempre es par
-        (let [skew1 (* cur a)
+        (let [skew1 (* cur a) ;; cuando cur alcanza el doble de n, se completa el ciclo.
               skew2 (* skew1 2.0)]
+          (q/stroke (q/map-range a 0 q/TWO-PI 50 150) 150 255)
           (q/line (* inner-r (q/cos (+ skew1 a)))
                   (* inner-r (q/sin (+ skew1 a)))
                   (* outer-r (q/cos (+ skew2 a)))
