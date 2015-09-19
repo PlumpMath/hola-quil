@@ -17,16 +17,21 @@
     ;;(= 39 (q/key-code)) (do (println slider) (println "crece") (inc slider))
     ;;))
 
-(defn dibuja []
+#_(doseq [[index word] (map vector
+                          (iterate inc 0)
+                          ["one" "two" "three"])]
+  (prn (str index " " word)))
+
+    (defn dibuja []
   (let [w (q/width)
         h (q/height)
         hw (/ w 2)
         hh (/ h 2)
         inner-r (* hw 0.5)
         outer-r (- hh 20)
-        sw 2
-        n 299
-        cur 156]
+        sw 1
+        n 208
+        cur 32]
 
     (q/fill 0)
     (q/text "emerald3" 10 20)
@@ -35,14 +40,24 @@
     (q/text-num cur 10 80)
     (q/stroke-weight sw)
     (q/with-translation [hw hh]
-      (doseq [a (range 0 q/TWO-PI (/ q/PI n))] ;; el numero de barras es nx2. Siempre es par
+      (doseq [[index a] (map vector (iterate inc 0) (range 0 q/TWO-PI (/ q/PI n)))] ;; el numero de barras es nx2. Siempre es par
         (let [skew1 (* cur a) ;; cuando cur alcanza el doble de n, se completa el ciclo.
               skew2 (* skew1 2.0)]
-          (q/stroke (q/map-range a 0 q/TWO-PI 50 150) 150 255)
+
+          ;(q/stroke (q/map-range a 0 q/TWO-PI 50 150) 200 255)
+          (q/stroke 0 255 255)
+          (if (odd? index)
           (q/line (* inner-r (q/cos (+ skew1 a)))
                   (* inner-r (q/sin (+ skew1 a)))
                   (* outer-r (q/cos (+ skew2 a)))
-                  (* outer-r (q/sin (+ skew2 a))))))))
+                  (* outer-r (q/sin (+ skew2 a)))))
+          (q/stroke 0 0 0)
+          (if (even? index)
+          (q/line (* inner-r (q/cos (+ skew1 a)))
+                  (* inner-r (q/sin (+ skew1 a)))
+                  (* outer-r (q/cos (+ skew2 a)))
+                  (* outer-r (q/sin (+ skew2 a)))))
+          ))))
   )
 
 (defn draw []
@@ -54,7 +69,7 @@
 
 (q/defsketch emerald
    :host "canvas"
-   :size [720 720]
+   :size [520 520]
    :setup setup
    :draw draw
    ;:renderer :pdf
