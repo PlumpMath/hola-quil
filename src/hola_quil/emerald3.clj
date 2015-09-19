@@ -1,5 +1,6 @@
 (ns quil-site.examples.emerald
   (:require [quil.core :as q :include-macros true]
+
   ))
 
 (defn setup []
@@ -23,9 +24,9 @@
         hh (/ h 2)
         inner-r (* hw 0.5)
         outer-r (- hh 20)
-        sw 1.2
-        n 300
-        cur 150]
+        sw 2
+        n 299
+        cur 156]
 
     (q/fill 0)
     (q/text "emerald3" 10 20)
@@ -53,9 +54,11 @@
 
 (q/defsketch emerald
    :host "canvas"
-   :size [1020 1020]
+   :size [720 720]
    :setup setup
    :draw draw
+   ;:renderer :pdf
+   ;:output-file "emerald3"
  ;;  :key-pressed key-pressed
   )
 
