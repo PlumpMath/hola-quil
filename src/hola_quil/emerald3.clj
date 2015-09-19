@@ -5,7 +5,7 @@
 
 (defn setup []
   (q/frame-rate 60)
-  (q/color-mode :hsb )
+  (q/color-mode :hsb 360 100 100)
  ;; (q/no-cursor)
   )
 
@@ -17,10 +17,7 @@
     ;;(= 39 (q/key-code)) (do (println slider) (println "crece") (inc slider))
     ;;))
 
-#_(doseq [[index word] (map vector
-                          (iterate inc 0)
-                          ["one" "two" "three"])]
-  (prn (str index " " word)))
+
 
     (defn dibuja []
   (let [w (q/width)
@@ -29,9 +26,9 @@
         hh (/ h 2)
         inner-r (* hw 0.5)
         outer-r (- hh 20)
-        sw 1
-        n 208
-        cur 32]
+        sw 1.3
+        n 300
+        cur 74.4]
 
     (q/fill 0)
     (q/text "emerald3" 10 20)
@@ -45,13 +42,13 @@
               skew2 (* skew1 2.0)]
 
           ;(q/stroke (q/map-range a 0 q/TWO-PI 50 150) 200 255)
-          (q/stroke 0 255 255)
+          (q/stroke (q/map-range a 0 q/TWO-PI 145 190) 96 76)
           (if (odd? index)
           (q/line (* inner-r (q/cos (+ skew1 a)))
                   (* inner-r (q/sin (+ skew1 a)))
                   (* outer-r (q/cos (+ skew2 a)))
                   (* outer-r (q/sin (+ skew2 a)))))
-          (q/stroke 0 0 0)
+          (q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98)
           (if (even? index)
           (q/line (* inner-r (q/cos (+ skew1 a)))
                   (* inner-r (q/sin (+ skew1 a)))
@@ -62,7 +59,7 @@
 
 (defn draw []
   (q/no-stroke)
-  (q/background 255)
+  (q/background 360)
   ;; (println  (q/mouse-x))
   (dibuja)
   )
