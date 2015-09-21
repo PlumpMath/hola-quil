@@ -8,6 +8,8 @@
             [schema.core :as s]
   ))
 
+
+
 (defn key-pressed []
   (cond
    (= 37 (q/key-code)) (q/save-frame "spirograph-####.png")))
@@ -24,6 +26,8 @@
    :str-w (p/fnk [sw] sw)
    :n (p/fnk [nx] nx)
    :grad (p/fnk [gr] gr)
+   :skew1 (p/fnk [grad a] (* grad a))
+   :skew2 (p/fnk [skew1] (* skew1 2))
    :colorh1 (p/fnk [h1] h1)
    :colorh2 (p/fnk [h2] h2)
    }
@@ -67,7 +71,7 @@
   (q/stroke-weight (:str-w out))
   (q/with-translation [(:half-w out) (:half-h out)]
     (doseq [[index a] (map vector (iterate inc 0) (range 0 q/TWO-PI (/ q/PI (:n out))))]
-      (let [skew1 (* (:grad out) a)
+      (let [skew1 (* (:grad out) a) ;; --> Meter skew en spirograph???
             skew2 (* skew1 2)]
         ;(q/stroke 0)
         (cond
