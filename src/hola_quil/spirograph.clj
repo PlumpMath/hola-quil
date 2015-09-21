@@ -41,10 +41,17 @@
   (def out (spiro-graph-eager {:wx (q/width)
                                :hx (q/height)
                                :sw 1
+<<<<<<< HEAD
                                :nx 342
                                :gr 285
                                :h1 180
                                :h2 100}))
+=======
+                               :nx 350
+                               :gr 74.5
+                               :h1 155
+                               :h2 5}))
+>>>>>>> origin/master
 
   ;; q/width y q/height no tienen valor hasta que size es llamado.
   ;; Si no los pongo dentro del draw no funcionan.
@@ -60,6 +67,7 @@
     (doseq [[index a] (map vector (iterate inc 0) (range 0 q/TWO-PI (/ q/PI (:n out))))]
       (let [skew1 (* (:grad out) a)
             skew2 (* skew1 2.0)]
+<<<<<<< HEAD
         ;(q/stroke 0)
         (cond
          (odd? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
@@ -67,6 +75,14 @@
                       ;(q/stroke 360 100 100)  ;rojo
          (even? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98) ;gama de amarillos-verdosos
                        (q/stroke (:colorh2 out) 70 100)
+=======
+        (cond
+         (odd? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
+                      (q/stroke (:colorh1 out) 90 85)
+                      ;(q/stroke 360 100 100)  ;rojo
+         (even? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98) ;gama de amarillos-verdosos
+                       (q/stroke (:colorh2 out) 90 85)
+>>>>>>> origin/master
                       ;(q/stroke 0) ;negro
         )
         (q/line (* (:inner-r out) (q/cos (+ skew1 a)))
