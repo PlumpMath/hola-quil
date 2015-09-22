@@ -12,7 +12,7 @@
 (def grad (atom 1))
 
 (defn key-pressed []
-  (println (q/key-code))
+ ; (println (q/key-code))
   (cond
    (= 49 (q/key-code)) (q/save-frame "spirograph-####.png") ;1
    (= 39 (q/key-code)) (swap! n inc) ;RIGHT
@@ -38,16 +38,7 @@
 (defn draw []
   (q/background 360)
   (q/stroke 0)
-  (q/no-fill)
-  (q/stroke-weight 2)
-  (doseq [x (range 0 700 50)
-          y (range 0 700 50)]
-       (q/point x y))
 
-
-  (q/bezier 400 100 400 200 300 300 200 300 )
-  (q/bezier 400 100 400 200 200 250 150 200 )
-  (q/arc 200 50 80 40 0 (+ q/PI q/QUARTER-PI))
 
   (def out (let [initial-data {:w (q/width)
                                :h (q/height)
@@ -80,14 +71,19 @@
     (doseq [[index a] (map vector (iterate inc 0) (range 0 q/TWO-PI (/ q/PI (:n out))))]
       (let [skew1 (* (:grad out) a) ;; --> Meter skew en spirograph???
             skew2 (* skew1 2)
-            x1 (* (:inner-r out) (q/cos (+ skew1 a)))
-            y1 (* (:inner-r out) (q/sin (+ skew1 a)))
-            x2 (* (:outer-r out) (q/cos (+ skew2 a)))
-            y2 (* (:outer-r out) (q/sin (+ skew2 a)))
-            xc (/ (+ x1 x2) 2)
-            yc (/ (+ y1 y2) 2)
-            rx (Math/sqrt (+ (Math/pow 2 (- xc x1))(Math/pow 2 (- yc y1))))
-            ry 50
+            alfa1 (+ skew1 a)
+            alfa2 (+ skew2 a)
+            x1 (* (:inner-r out) (q/cos alfa1))
+            y1 (* (:inner-r out) (q/sin alfa1))
+            x2 (* (:outer-r out) (q/cos alfa2))
+            y2 (* (:outer-r out) (q/sin alfa2))
+            b (Math/sqrt (+ (Math/pow 2 (- x2 x1)) (Math/pow 2 (- y2 y1))))
+            l (* (:inner-r out) 0.35)
+            xl1 (+ x1 (* l (q/cos (- 135 (Math/acos (/ (- x2 x1) b))))))
+            yl1 (+ y1 (* l (q/sin (- 135 (Math/acos (/ (- x2 x1) b))))))
+            xl2 (- x2 (* l (q/cos (- 135 (Math/acos (/ (- x2 x1) b))))))
+            yl2 (+ y2 (* l (q/sin (- 135 (Math/acos (/ (- x2 x1) b))))))
+
             ]
         ;(q/stroke 0)
         (cond
@@ -98,7 +94,17 @@
                        (q/stroke (:colorh2 out) 70 100)
                       ;(q/stroke 0) ;negro
         )
-     ; (q/arc xc yc rx ry 0 q/PI )
+        (q/no-fill)
+        (q/bezier x1 y1 xl1 yl1 xl2 yl2 x2 y2)
+        (q/stroke-weight 10)
+        (q/stroke 0)
+        (q/point xl1 yl1)
+        (q/stroke 0 100 100)
+        (q/point xl2 yl2)
+        (q/stroke-weight (:str-w out))
+        (q/line x1 y1 x2 y2)
+     ;   (println "index " index xl1 yl1)
+
         )
     )))
 
