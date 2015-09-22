@@ -1,4 +1,6 @@
-(ns hola-quil.spirograph
+;; Cuando lo lanzo me abre dos ventanas. ¿Por qué?
+
+(ns hola-quil.spirograph-03
   (:require [quil.core :as q :include-macros true]
             [quil.middleware :as m]
             [plumbing.core :as p]
@@ -6,17 +8,24 @@
             [schema.core :as s]
   ))
 
+(def n (atom 1))
+(def grad (atom 1))
+
 (defn key-pressed []
+  (println (q/key-code))
   (cond
-   (= 37 (q/key-code)) (q/save-frame "spirograph-####.png")))
+   (= 49 (q/key-code)) (q/save-frame "spirograph-####.png") ;1
+   (= 39 (q/key-code)) (swap! n inc) ;RIGHT
+   (= 37 (q/key-code)) (swap! n dec) ;LEFT
+   (= 38 (q/key-code)) (swap! grad inc) ;UP
+   (= 40 (q/key-code)) (swap! grad dec) ;DOWN
+   ))
 
 (def spiro-graph
   {:half-w (p/fnk [w] (/ w 2))
    :half-h (p/fnk [h] (/ h 2))
    :outer-r (p/fnk [half-w sep-borde] (- half-w sep-borde))
-   :inner-r (p/fnk [outer-r] (* outer-r 0.5))
-   }
-  )
+   :inner-r (p/fnk [outer-r r] (* outer-r r))})
 
 (def spiro-graph-eager (g/compile spiro-graph))
 
@@ -28,13 +37,26 @@
 
 (defn draw []
   (q/background 360)
+  (q/stroke 0)
+  (q/no-fill)
+  (q/stroke-weight 2)
+  (doseq [x (range 0 700 50)
+          y (range 0 700 50)]
+       (q/point x y))
+
+
+  (q/bezier 400 100 400 200 300 300 200 300 )
+  (q/bezier 400 100 400 200 200 250 150 200 )
+  (q/arc 200 50 80 40 0 (+ q/PI q/QUARTER-PI))
 
   (def out (let [initial-data {:w (q/width)
                                :h (q/height)
+                               :r 0.5
                                :sep-borde 30
                                :str-w 1
-                               :n 341
-                               :grad 276
+                               :sw 1
+                               :n (/ @n 10)
+                               :grad (/ @grad 10)
                                :colorh1 180
                                :colorh2 100}]
              (merge initial-data (spiro-graph-eager initial-data))))
@@ -43,16 +65,30 @@
   ;; Si no los pongo dentro del draw no funcionan.
 
   (q/fill 0)
-  (q/text "spirograph" 10 20)
-  (q/text-num (:str-w out) 10 40)
-  (q/text-num (:n out) 10 60)
-  (q/text-num (:grad out) 10 80)
+  (q/text "spirograph-03" 10 20)
+  (q/text "r" 10 40)
+  (q/text-num (:r out) 40 40)
+  (q/text "str-w" 10 60)
+  (q/text-num (:str-w out) 40 60)
+  (q/text "n" 10 80)
+  (q/text-num (:n out) 40 80)
+  (q/text "grad" 10 100)
+  (q/text-num (:grad out) 40 100)
   (q/stroke 0)
   (q/stroke-weight (:str-w out))
   (q/with-translation [(:half-w out) (:half-h out)]
     (doseq [[index a] (map vector (iterate inc 0) (range 0 q/TWO-PI (/ q/PI (:n out))))]
-      (let [skew1 (* (:grad out) a)
-            skew2 (* skew1 2.0)]
+      (let [skew1 (* (:grad out) a) ;; --> Meter skew en spirograph???
+            skew2 (* skew1 2)
+            x1 (* (:inner-r out) (q/cos (+ skew1 a)))
+            y1 (* (:inner-r out) (q/sin (+ skew1 a)))
+            x2 (* (:outer-r out) (q/cos (+ skew2 a)))
+            y2 (* (:outer-r out) (q/sin (+ skew2 a)))
+            xc (/ (+ x1 x2) 2)
+            yc (/ (+ y1 y2) 2)
+            rx (Math/sqrt (+ (Math/pow 2 (- xc x1))(Math/pow 2 (- yc y1))))
+            ry 50
+            ]
         ;(q/stroke 0)
         (cond
          (odd? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
@@ -62,16 +98,14 @@
                        (q/stroke (:colorh2 out) 70 100)
                       ;(q/stroke 0) ;negro
         )
-        (q/line (* (:inner-r out) (q/cos (+ skew1 a)))
-                  (* (:inner-r out) (q/sin (+ skew1 a)))
-                  (* (:outer-r out) (q/cos (+ skew2 a)))
-                  (* (:outer-r out) (q/sin (+ skew2 a))))
-    ))))
+     ; (q/arc xc yc rx ry 0 q/PI )
+        )
+    )))
 
 
 (q/defsketch spirograph
    :host "canvas"
- ; :size [1000 1000]
+   ;:size [1000 1000]
    :size [700 700]
    :setup setup
    :draw draw
