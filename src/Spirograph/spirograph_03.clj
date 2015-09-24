@@ -1,6 +1,6 @@
-;; Cuando lo lanzo me abre dos ventanas. ¿Por qué?
+; Spirograph de líneas rectas.
 
-(ns hola-quil.spirograph-02
+(ns Spirograph.spirograph-03
   (:require [quil.core :as q :include-macros true]
             [quil.middleware :as m]
             [plumbing.core :as p]
@@ -8,28 +8,27 @@
             [schema.core :as s]
   ))
 
+(def n (atom 1))
+(def grad (atom 1))
+
 (defn key-pressed []
+  (println (q/key-code))
   (cond
-   (= 37 (q/key-code)) (q/save-frame "spirograph-####.png")))
+   (= 49 (q/key-code)) (q/save-frame "spirograph03-####.png") ;1
+   (= 39 (q/key-code)) (swap! n inc) ;RIGHT
+   (= 37 (q/key-code)) (swap! n dec) ;LEFT
+   (= 38 (q/key-code)) (swap! grad inc) ;UP
+   (= 40 (q/key-code)) (swap! grad dec) ;DOWN
+   ))
 
 (def spiro-graph
-  {:w (p/fnk [wx] wx)
-   :h (p/fnk [hx] hx)
-   :sep-borde (p/fnk [] 30)
-   :half-w (p/fnk [w] (/ w 2))
+  {:half-w (p/fnk [w] (/ w 2))
    :half-h (p/fnk [h] (/ h 2))
    :outer-r (p/fnk [half-w sep-borde] (- half-w sep-borde))
-   :r (p/fnk [rx] rx)
-   :inner-r (p/fnk [outer-r r] (* outer-r r))
-   :str-w (p/fnk [sw] sw)
-   :n (p/fnk [nx] nx)
-   :grad (p/fnk [gr] gr)
-   :colorh1 (p/fnk [h1] h1)
-   :colorh2 (p/fnk [h2] h2)
-   }
-  )
+   :inner-r (p/fnk [outer-r r] (* outer-r r))})
 
 (def spiro-graph-eager (g/compile spiro-graph))
+;; es mejor hacer eager, a no ser que lazy sea necesario por algo
 
 
 (defn setup []
@@ -41,20 +40,23 @@
   (q/background 360)
 
 
-  (def out (spiro-graph-eager {:wx (q/width)
-                               :hx (q/height)
-                               :rx 0.5
+  (def out (let [initial-data {:w (q/width)
+                               :h (q/height)
+                               :r 0.5
+                               :sep-borde 30
+                               :str-w 1
                                :sw 1
-                               :nx 300
-                               :gr 207.1923
-                               :h1 180
-                               :h2 40}))
+                               :n (/ @n 10)
+                               :grad (/ @grad 10)
+                               :colorh1 180
+                               :colorh2 100}]
+             (merge initial-data (spiro-graph-eager initial-data))))
 
   ;; q/width y q/height no tienen valor hasta que size es llamado.
   ;; Si no los pongo dentro del draw no funcionan.
 
   (q/fill 0)
-  (q/text "spirograph-02" 10 20)
+  (q/text "spirograph-03" 10 20)
   (q/text "r" 10 40)
   (q/text-num (:r out) 40 40)
   (q/text "str-w" 10 60)
@@ -89,8 +91,8 @@
 
 (q/defsketch spirograph
    :host "canvas"
-   :size [1000 1000]
-  ; :size [700 700]
+   ;:size [1000 1000]
+   :size [700 700]
    :setup setup
    :draw draw
    :key-pressed key-pressed)
