@@ -1,6 +1,4 @@
-;; Las lineas se pueden convertir en elipses
-;; Las pares giran en un sentido y las impares en otro
-;; Voy a tratar de convertir en un graph el "monster-let" que hay en draw
+;; Astroide exterior, circunferencia interior más grande
 
 
 (ns Spirograph.spirograph_08
@@ -89,10 +87,10 @@
             skew2 (* skew1 2)
             alfa1 (+ skew1 a)
             alfa2 (+ skew2 a)
-            x1 (* 1.5 (:inner-r out)   (q/cos alfa1) )
-            y1 (* 1.5 (:inner-r out)  (q/sin alfa1) )
-            x2 (* (:outer-r out) (Math/pow (q/cos alfa2) 3))
-            y2 (* (:outer-r out) (Math/pow (q/sin alfa2) 3))
+            x1 (* 1.5 (:inner-r out)  (q/cos alfa1)) ;; Circunferencia interior más grande
+            y1 (* 1.5 (:inner-r out)  (q/sin alfa1)) ;; Circunferencia interior más grande
+            x2 (* (:outer-r out) (Math/pow (q/cos alfa2) 3)) ;; Astroide
+            y2 (* (:outer-r out) (Math/pow (q/sin alfa2) 3)) ;;Astroide
             xc (+ (/ (- x2 x1) 2) x1)
             yc (+ (/ (- y2 y1) 2) y1)
             rx (Math/hypot (- x2 x1) (- y2 y1))
@@ -100,10 +98,6 @@
             angi (atom 0)
             angf (atom q/TWO-PI)
             ]
-
-        {:x a
-
-         }
 
         ;(q/stroke 0)
         (cond

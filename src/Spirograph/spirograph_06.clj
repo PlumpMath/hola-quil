@@ -1,6 +1,5 @@
-;; Las lineas se pueden convertir en elipses
-;; Las pares giran en un sentido y las impares en otro
-;; Voy a tratar de convertir en un graph el "monster-let" que hay en draw
+;; He convertido las circunferencias en elipses
+
 
 
 (ns Spirograph.spirograph_06
@@ -100,10 +99,6 @@
             angi (atom 0)
             angf (atom q/TWO-PI)
             ]
-
-        {:x a
-
-         }
 
         ;(q/stroke 0)
         (cond

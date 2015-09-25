@@ -1,6 +1,9 @@
-;; La circunferencia interior se convierte en un astroide
+;; Las lineas se pueden convertir en elipses
+;; Las pares giran en un sentido y las impares en otro
+;; Voy a tratar de convertir en un graph el "monster-let" que hay en draw
 
-(ns Spirograph.spirograph_07
+
+(ns Spirograph.spirograph_08_1
   (:require [quil.core :as q :include-macros true]
             [quil.middleware :as m]
             [plumbing.core :as p]
@@ -8,15 +11,15 @@
             [schema.core :as s]
   ))
 
-(def n (atom 180))
-(def grad (atom 119333))
+(def n (atom 200))
+(def grad (atom 100000))
 (def twist (atom 0))
 
 
 (defn key-pressed []
   ;(println (q/key-code))
   (cond
-   (= 49 (q/key-code)) (q/save-frame "spirograph07-####.png") ;1
+   (= 49 (q/key-code)) (q/save-frame "spirograph-08-1-####.png") ;1
    (= 39 (q/key-code)) (swap! n inc) ;RIGHT
    (= 37 (q/key-code)) (swap! n dec) ;LEFT
    (= 38 (q/key-code)) (swap! grad inc) ;UP
@@ -42,7 +45,7 @@
 
 
 (defn draw []
-  (q/background 360)
+  (q/background 0)
   (q/stroke 0)
 
   (def out (let [initial-data {:w (q/width)
@@ -53,16 +56,16 @@
                                :sw 1
                                :n  @n
                                :grad (/ @grad 1000)
-                               :colorh1 40
-                               :colorh2 180
+                               :colorh1 160
+                               :colorh2 50
                                :tw @twist}]
              (merge initial-data (spiro-graph-ini-eager initial-data))))
 
   ;; q/width y q/height no tienen valor hasta que size es llamado.
   ;; Si no los pongo dentro del draw no funcionan.
 
-  (q/fill 0)
-  (q/text "spirograph-07" 10 20)
+  (q/fill 360)
+  (q/text "spirograph-08-1" 10 20)
   (q/text "r" 10 40)
   (q/text-num (:r out) 40 40)
   (q/text "str-w" 10 60)
@@ -86,10 +89,10 @@
             skew2 (* skew1 2)
             alfa1 (+ skew1 a)
             alfa2 (+ skew2 a)
-            x1 (*  (:inner-r out)  (Math/pow (q/cos alfa1) 3)) ;; astroide
-            y1 (*  (:inner-r out)  (Math/pow(q/sin alfa1) 3)) ;; astroide
-            x2 (* (:outer-r out) (q/cos alfa2))
-            y2 (* (:outer-r out) (q/sin alfa2))
+            x1 (* 1.5 (:inner-r out)   (q/cos alfa1) )
+            y1 (* 1.5 (:inner-r out)  (q/sin alfa1) )
+            x2 (* (:outer-r out) (Math/pow (q/cos alfa2) 3))
+            y2 (* (:outer-r out) (Math/pow (q/sin alfa2) 3))
             xc (+ (/ (- x2 x1) 2) x1)
             yc (+ (/ (- y2 y1) 2) y1)
             rx (Math/hypot (- x2 x1) (- y2 y1))
@@ -100,17 +103,15 @@
 
         ;(q/stroke 0)
         (cond
-         (odd? index) (do
-                        (q/stroke (:colorh1 out) 90 70)
-                        ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
+         (odd? index)
+                        ;(q/stroke (:colorh1 out) 45 100)
+                        (q/stroke (q/map-range a 0 q/TWO-PI 0 100) 50 (q/map-range a 0 q/TWO-PI 30 100) ) ;gama de verdes-turquesas
                         ;(q/stroke 360 100 100)  ;rojo
-                        )
          (even? index)
-                       (do
-                         (q/stroke (:colorh2 out) 70 90)
-                         ;(q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98) ;gama de amarillos-verdosos
+                         ;(q/stroke (:colorh2 out) 45 100)
+                         (q/stroke (q/map-range a 0 q/TWO-PI 260 360) 50 (q/map-range a 0 q/TWO-PI 30 100) )
                          ;(q/stroke 0) ;negro
-                         ))
+                         )
 
         (q/no-fill)
         (q/with-translation [xc yc]
