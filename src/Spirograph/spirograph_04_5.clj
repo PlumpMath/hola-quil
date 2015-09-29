@@ -1,7 +1,7 @@
 ;; Las lineas se pueden convertir en arcos de elipse
 
 
-(ns Spirograph.spirograph_04
+(ns Spirograph.spirograph_04_5
   (:require [quil.core :as q :include-macros true]
             [quil.middleware :as m]
             [plumbing.core :as p]
@@ -9,7 +9,7 @@
             [schema.core :as s]
   ))
 
-(def n (atom 1))
+(def n (atom 300))
 (def grad (atom 0))
 (def twist (atom 0))
 
@@ -17,7 +17,7 @@
 (defn key-pressed []
   (println (q/key-code))
   (cond
-   (= 49 (q/key-code)) (q/save-frame "spirograph04-####.png") ;1
+   (= 49 (q/key-code)) (q/save-frame "spirograph04-5-####.png") ;1
    (= 39 (q/key-code)) (swap! n inc) ;RIGHT
    (= 37 (q/key-code)) (swap! n dec) ;LEFT
    (= 38 (q/key-code)) (swap! grad inc) ;UP
@@ -52,8 +52,8 @@
                                :sw 1
                                :n @n
                                :grad (/ @grad 100)
-                               :colorh1 200
-                               :colorh2 00
+                               :colorh1 100
+                               :colorh2 220
                                :tw @twist}]
              (merge initial-data (spiro-graph-eager initial-data))))
 
@@ -61,7 +61,7 @@
   ;; Si no los pongo dentro del draw no funcionan.
 
   (q/fill 0)
-  (q/text "spirograph-04" 10 20)
+  (q/text "spirograph-04-5" 10 20)
   (q/text "r" 10 40)
   (q/text-num (:r out) 40 40)
   (q/text "str-w" 10 60)
@@ -85,8 +85,8 @@
             skew2 (* skew1 2)
             alfa1 (+ skew1  a)
             alfa2 (+ skew2  a)
-            x1 (* (:inner-r out) (q/cos alfa1))
-            y1 (* (:inner-r out) (q/sin alfa1))
+            x1 (* (:inner-r out) (Math/pow (q/cos alfa1) 7))
+            y1 (* (:inner-r out) (Math/pow (q/sin alfa1) 7))
             x2 (* (:outer-r out) (q/cos alfa2))
             y2 (* (:outer-r out) (q/sin alfa2))
             xc (+ (/ (- x2 x1) 2) x1)
@@ -98,10 +98,10 @@
         ;(q/stroke 0)
         (cond
          (odd? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
-                      (q/stroke (:colorh1 out) 100 80)
+                      (q/stroke (:colorh1 out) 50 80)
                       ;(q/stroke 360 100 100)  ;rojo
          (even? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98) ;gama de amarillos-verdosos
-                       (q/stroke (:colorh2 out) 70 100)
+                       (q/stroke (:colorh2 out) 50 80)
                       ;(q/stroke 0) ;negro
         )
 

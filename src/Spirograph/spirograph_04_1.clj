@@ -51,7 +51,7 @@
                                :sep-borde 30
                                :str-w 1
                                :sw 1
-                               :n (/ @n 10)
+                               :n @n
                                :grad (/ @grad 100)
                                :colorh1 170
                                :colorh2 345

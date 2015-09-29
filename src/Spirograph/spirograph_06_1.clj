@@ -1,7 +1,8 @@
-;; Las lineas se pueden convertir en arcos de elipse
+;; He convertido las circunferencias en elipses
 
 
-(ns Spirograph.spirograph_04
+
+(ns Spirograph.spirograph_06_1
   (:require [quil.core :as q :include-macros true]
             [quil.middleware :as m]
             [plumbing.core :as p]
@@ -9,15 +10,15 @@
             [schema.core :as s]
   ))
 
-(def n (atom 1))
-(def grad (atom 0))
+(def n (atom 300))
+(def grad (atom 150000))
 (def twist (atom 0))
 
 
 (defn key-pressed []
-  (println (q/key-code))
+  ;(println (q/key-code))
   (cond
-   (= 49 (q/key-code)) (q/save-frame "spirograph04-####.png") ;1
+   (= 49 (q/key-code)) (q/save-frame "06-1-spirograph-####.png") ;1
    (= 39 (q/key-code)) (swap! n inc) ;RIGHT
    (= 37 (q/key-code)) (swap! n dec) ;LEFT
    (= 38 (q/key-code)) (swap! grad inc) ;UP
@@ -26,13 +27,15 @@
    (= 98 (q/key-code)) (swap! twist (fn [x] (if (> x 0) (dec x) 0))) ;2
    ))
 
-(def spiro-graph
+(def spiro-graph-ini
   {:half-w (p/fnk [w] (/ w 2))
    :half-h (p/fnk [h] (/ h 2))
    :outer-r (p/fnk [half-w sep-borde] (- half-w sep-borde))
-   :inner-r (p/fnk [outer-r r] (* outer-r r))})
+   :inner-r (p/fnk [outer-r r] (* outer-r r))
+   })
 
-(def spiro-graph-eager (g/compile spiro-graph))
+(def spiro-graph-ini-eager (g/compile spiro-graph-ini))
+
 
 
 (defn setup []
@@ -47,21 +50,21 @@
   (def out (let [initial-data {:w (q/width)
                                :h (q/height)
                                :r 0.5
-                               :sep-borde 30
+                               :sep-borde 50
                                :str-w 1
                                :sw 1
-                               :n @n
-                               :grad (/ @grad 100)
-                               :colorh1 200
-                               :colorh2 00
+                               :n  @n
+                               :grad (/ @grad 1000)
+                               :colorh1 170
+                               :colorh2 160
                                :tw @twist}]
-             (merge initial-data (spiro-graph-eager initial-data))))
+             (merge initial-data (spiro-graph-ini-eager initial-data))))
 
   ;; q/width y q/height no tienen valor hasta que size es llamado.
   ;; Si no los pongo dentro del draw no funcionan.
 
   (q/fill 0)
-  (q/text "spirograph-04" 10 20)
+  (q/text "spirograph-06-1" 10 20)
   (q/text "r" 10 40)
   (q/text-num (:r out) 40 40)
   (q/text "str-w" 10 60)
@@ -83,27 +86,33 @@
     (doseq [[index a] (map vector (iterate inc 0) (range 0 q/TWO-PI (/ q/PI (:n out))))]
       (let [skew1 (* (:grad out) a) ;; --> Meter skew en spirograph???
             skew2 (* skew1 2)
-            alfa1 (+ skew1  a)
-            alfa2 (+ skew2  a)
-            x1 (* (:inner-r out) (q/cos alfa1))
-            y1 (* (:inner-r out) (q/sin alfa1))
+            alfa1 (+ skew1 a)
+            alfa2 (+ skew2 a)
+            x1 (* (:inner-r out) 0.75 (q/cos alfa1)) ;; elipse: x = h + a*cos alfa1
+            y1 (* (:inner-r out) (q/sin alfa1)) ;; elipse: y = k + b*cos alfa1
             x2 (* (:outer-r out) (q/cos alfa2))
-            y2 (* (:outer-r out) (q/sin alfa2))
+            y2 (* (:outer-r out) 0.75 (q/sin alfa2))
             xc (+ (/ (- x2 x1) 2) x1)
             yc (+ (/ (- y2 y1) 2) y1)
             rx (Math/hypot (- x2 x1) (- y2 y1))
             ry (:tw out)
+            angi (atom 0)
+            angf (atom q/TWO-PI)
             ]
 
         ;(q/stroke 0)
         (cond
-         (odd? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
-                      (q/stroke (:colorh1 out) 100 80)
-                      ;(q/stroke 360 100 100)  ;rojo
-         (even? index) ;(q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98) ;gama de amarillos-verdosos
-                       (q/stroke (:colorh2 out) 70 100)
-                      ;(q/stroke 0) ;negro
-        )
+         (odd? index) (do
+                        (q/stroke (:colorh1 out) 90 70)
+                        ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
+                        ;(q/stroke 360 100 100)  ;rojo
+                        )
+         (even? index)
+                       (do
+                         (q/stroke (:colorh2 out) 60 100)
+                         ;(q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98) ;gama de amarillos-verdosos
+                         ;(q/stroke 0) ;negro
+                         ))
 
         (q/no-fill)
         (q/with-translation [xc yc]
@@ -113,7 +122,7 @@
             (if (> y2 y1)
               (q/rotate  (Math/acos  (/ (- x2 x1) rx)))
               (q/rotate  (- 0 (Math/acos  (/ (- x2 x1) rx))))))
-        (q/arc 0 0 rx ry 0 q/PI))
+        (q/arc 0 0 rx ry @angi @angf))
 
         )
     )))
