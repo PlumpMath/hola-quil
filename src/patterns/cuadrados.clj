@@ -1,4 +1,4 @@
-(ns tramas.cuadrados
+(ns patterns.cuadrados
   (:require [quil.core :as q]
             [quil.helpers.seqs :as s]))
 

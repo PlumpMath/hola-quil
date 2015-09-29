@@ -46,7 +46,7 @@
                                                   ;; haga una onda completa. Si divido por n, entran n curvas sinusoidales
         rads      (map radians (range))
         ys        (map sin rads)
-        ys        (map #(pow % 3) ys) ;; opcional
+        ;ys        (map #(pow % 3) ys) ;; opcional
         scaled-ys (mul-add ys 40 50)
         line-args (line-join-points xs scaled-ys)]
     (dorun (map #(apply line %) line-args))))

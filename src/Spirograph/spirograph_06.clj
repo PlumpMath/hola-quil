@@ -7,7 +7,7 @@
             [quil.middleware :as m]
             [plumbing.core :as p]
             [plumbing.graph :as g]
-            [schema.core :as s]
+            ;[schema.core :as s]
   ))
 
 (def n (atom 300))

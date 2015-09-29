@@ -1,4 +1,4 @@
-(ns tramas.triangulos
+(ns patterns.triangulos
   (:require [quil.core :as q]
             [quil.helpers.seqs :as s]))
 

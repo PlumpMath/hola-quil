@@ -50,6 +50,8 @@
         xs        (range-incl border-x (- (width) border-x) step)
         ys        (repeatedly #(rand-y border-y))
         line-args (line-join-points xs ys)]
+  ;  (println "xs" xs)
+  ;  (println "ys" ys)
     (dorun (map #(apply line %) line-args))))
 
 
