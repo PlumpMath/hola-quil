@@ -1,3 +1,6 @@
+;; De momento está igual que 1_2_triangulos
+
+
 (ns patterns.1_4_triangulos
   (:require [quil.core :as q]
             [quil.helpers.drawing :as d]

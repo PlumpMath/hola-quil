@@ -45,7 +45,7 @@
 (defn draw []
   (q/background 160 80 100)
   (q/stroke 360)
-  (q/stroke-weight 2)
+  (q/stroke-weight 5)
   (q/no-fill)
 
   (let [w (q/width)

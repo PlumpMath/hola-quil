@@ -1,3 +1,4 @@
+;; intento de usar plumbing en 1_2_triangulos
 (ns patterns.1_3_triangulos
   (:require [quil.core :as q]
             [quil.helpers.drawing :as d]
@@ -32,9 +33,9 @@
 
 (def draw-triang-sin-eager (g/compile draw-triang-sin))
 
-(def out )
+(def out (draw-triang-sin-eager {}))
 
-(defn dibuja-triangulo-equilatero [x y l]
+#_(defn dibuja-triangulo-equilatero [x y l]
 
     (q/with-translation [x1 y1]
       (q/rotate (q/radians 60))
