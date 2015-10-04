@@ -1,4 +1,4 @@
-;; La curvatura del sin depende del lado
+;; Los triángulos se orientan hacia donde está el ratón
 
 
 (ns patterns.1_5_triangulos
@@ -7,6 +7,8 @@
             [quil.helpers.seqs :as s]
             [quil.helpers.calc :as c]))
 
+
+(d/line-join-points (range 10) (range 10))
 
 (defn key-pressed []
   ;(println (q/key-code))
@@ -23,7 +25,7 @@
         y3 (- y (/ h 3))
         step (/ l 36)
         n (+ 1 (/ l step))
-        xs (s/range-incl 0 l step)
+        xs (s/range-incl 0 (inc l) step)
         ys (repeat (inc (/ l step))  0)
         line-args (d/line-join-points xs ys)]
         ;rads (map #(* 10 (q/radians %)) (range n))
@@ -41,14 +43,6 @@
     (q/with-translation [x3 y3]
       (q/rotate (q/radians 180))
       (dorun (map #(apply q/line %) line-args)))))
-
-(Math/asin 0)
-(Math/asin 0.5)
-(Math/asin 1) ;; PI/2
-(Math/asin -0.5)
-
-(def a q/PI)
-a
 
 (defn setup []
   (q/color-mode :hsb 360 100 100)
@@ -74,13 +68,8 @@ a
             dist (if (= 0 d) 0.0001 d)]
         (q/with-translation [xr y]
 
-            ;(q/rotate (q/map-range (q/mouse-y) 0 h 0 q/TWO-PI))
+            (q/stroke (q/map-range dist 0 (/ w 1.5) 0 360))
             ;(dibuja-triangulo-equilatero 0 0 l)
-            ;(q/text-num dist 0 0)
-            ;(q/text-num (q/mouse-x) 0 10)
-            ;(q/point 0 0)
-            (q/stroke (q/map-range xr 0 w 0 360))
-            (dibuja-triangulo-equilatero 0 0 l)
             (q/rotate (if (> (q/mouse-y) y)
                         (+ (/ q/PI 6) (Math/acos (/ (- (q/mouse-x) xr) dist)))
                         (- 0 (- (Math/acos (/ (- (q/mouse-x) xr) dist)) (/ q/PI 6)))))

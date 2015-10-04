@@ -1,7 +1,6 @@
-;; La curvatura del sin depende del lado
+;; Varios triangulos dentro de cada triangulo
 
-
-(ns patterns.1_4_triangulos
+(ns patterns.1_4_1_triangulos
   (:require [quil.core :as q]
             [quil.helpers.drawing :as d]
             [quil.helpers.seqs :as s]
@@ -12,7 +11,7 @@
 (defn key-pressed []
   ;(println (q/key-code))
   (cond
-   (= 49 (q/key-code)) (q/save-frame "01_4_triangulos-####.png"))) ;1
+   (= 49 (q/key-code)) (q/save-frame "01_4_1_triangulos-####.png"))) ;1
 
 (defn dibuja-triangulo-equilatero [x y l]
   (let [h (* l (q/sin (q/radians 60)))
@@ -26,14 +25,15 @@
         n (+ 1 (/ l step))
         xs (s/range-incl 0 (inc l) step)
         ;; líneas
-        ;ys (repeat (inc (/ l step))  0)
-        ;line-args (d/line-join-points xs ys)
+        ys (repeat (inc (/ l step))  0)
+        line-args (d/line-join-points xs ys)
         ;; curvas
-        rads (map #(* 10 (q/radians %)) (range n))
-        ys (map q/sin rads)
+        ;rads (map #(* 10 (q/radians %)) (range n))
+        ;ys (map q/sin rads)
         ;yss (map #(Math/pow % 3) ys) ;; modifica la curva
-        scaled-ys (map #(* (/ l 10) %) ys)
-        line-args (d/line-join-points xs scaled-ys)]
+        ;scaled-ys (map #(* (/ l 10) %) ys)
+        ;line-args (d/line-join-points xs scaled-ys)
+        ]
 
     (q/with-translation [x1 y1]
       (q/rotate (q/radians 60))
@@ -50,9 +50,9 @@
   (q/smooth))
 
 (defn draw []
-  (q/background 160 80 100)
-  (q/stroke 360)
-  (q/stroke-weight 5)
+  (q/background 360)
+  (q/stroke 150)
+  (q/stroke-weight 2)
   (q/no-fill)
 
   (let [w (q/width)
@@ -67,10 +67,13 @@
                      (even? index) (+ x (/ nx 2)))]
       (q/with-translation [xr y]
         (q/rotate (q/map-range (q/mouse-y) 0 h 0 q/TWO-PI))
-        (dibuja-triangulo-equilatero 0 0 l)))))
+        (dibuja-triangulo-equilatero 0 0 l)
+        (dibuja-triangulo-equilatero 0 0 (* 2 (/ l 3)))
+        (dibuja-triangulo-equilatero 0 0 (/ l 3)))
+        )))
 
-  (q/fill 0)
-  (q/text "1.4.triángulos" 10 20)
+  (q/fill 100)
+  (q/text "1.4.1.triángulos" 10 20)
   (q/text "mouse-x" 10 40)
   (q/text-num (q/mouse-x) 80 40)
   (q/text "mouse-y" 10 60)
