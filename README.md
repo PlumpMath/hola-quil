@@ -1,6 +1,6 @@
 # hola-quil
 
-A Quil sketch designed to ... well, that part is up to you.
+Playing with Quil
 
 ## Usage
 
