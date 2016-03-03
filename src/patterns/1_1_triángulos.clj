@@ -6,7 +6,6 @@
             ))
 
 
-
 (def m
   "Datos iniciales"
   {:step 10
@@ -16,6 +15,7 @@
   )
 
 (defn dibuja-horizontales []
+
   (q/stroke-weight 1)
 (doseq [y-add (s/range-incl 0 (q/height) (m :espaciado))
         ]
@@ -140,3 +140,5 @@
   :setup setup
   :draw draw
   :key-pressed key-pressed)
+
+(println "Cleanliness is next to godliness")

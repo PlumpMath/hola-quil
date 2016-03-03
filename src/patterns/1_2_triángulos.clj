@@ -9,7 +9,7 @@
 (defn key-pressed []
   ;(println (q/key-code))
   (cond
-   (= 49 (q/key-code)) (q/save-frame "01_2_triangulos-####.png"))) ;1
+   (= 49 (q/key-code)) (q/save-frame "000_triangulos-####.png"))) ;1
 
 (defn dibuja-triangulo-equilatero [x y l]
   (let [h (* l (q/sin (q/radians 60)))
@@ -45,7 +45,7 @@
 (defn draw []
   (q/background 160 80 100)
   (q/stroke 360)
-  (q/stroke-weight 5)
+  (q/stroke-weight 10)
   (q/no-fill)
 
   (let [w (q/width)
@@ -65,17 +65,18 @@
                           (q/with-translation [(+ x (/ nx 2)) y]
                            (q/rotate (q/map-range (q/mouse-y) 0 h 0 q/TWO-PI))
                            (dibuja-triangulo-equilatero 0 0 l))))))
-  (q/fill 0)
-  (q/text "1.2.triángulos" 10 20)
-  (q/text "mouse-x" 10 40)
-  (q/text-num (q/mouse-x) 80 40)
-  (q/text "mouse-y" 10 60)
-  (q/text-num (q/mouse-y) 80 60))
+  ;(q/fill 0)
+  ;(q/text "1.2.triángulos" 10 20)
+  ;(q/text "mouse-x" 10 40)
+  ;(q/text-num (q/mouse-x) 80 40)
+  ;(q/text "mouse-y" 10 60)
+  ;(q/text-num (q/mouse-y) 80 60)
+  )
 
 
 
 (q/defsketch triangulos
-  :size [700 700]
+  :size [1000 1000]
   :setup setup
   :draw draw
   :key-pressed key-pressed)

@@ -46,8 +46,8 @@
                                :sep-borde 30
                                :str-w 1
                                :sw 1
-                               :n (/ @n 10)
-                               :grad (/ @grad 10)
+                               :n (/ @n 1)
+                               :grad (/ @grad 100)
                                :colorh1 180
                                :colorh2 100}]
              (merge initial-data (spiro-graph-eager initial-data))))

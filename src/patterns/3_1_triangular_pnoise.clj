@@ -21,7 +21,8 @@
 
           line-args (d/line-join-points xs scaled-ys)]
 
-      (q/stroke  (q/map-range y-add 0 (q/height) 120 170) 50 100)
+      (q/stroke  (q/map-range y-add 0 (q/height) 220 120) 50 100)
+      (q/stroke-weight  (q/map-range y-add 0 (q/height) 1 2))
       (dorun (map #(apply q/line %) line-args)))))
 
 (defn dibuja-verticales [incl]
@@ -35,7 +36,8 @@
 
           line-args (d/line-join-points  ang-xs ys)]
 
-      (q/stroke (q/map-range x-add 0 (q/width) 170 220) 50 100)
+      (q/stroke (q/map-range x-add 0 (*  incl (q/width)) 190 230) 50 100)
+      (q/stroke-weight  (q/map-range x-add (- (q/width)) (* 2 (q/width)) 0.5 2.5))
       (dorun (map #(apply q/line %) line-args)))))
 
 (defn dibuja-marco []
@@ -71,13 +73,13 @@
   (dibuja-verticales 1)
 
 
-  (dibuja-marco)
+  ;(dibuja-marco)
 
   )
 
 (q/defsketch triangular-pnoise
   :title "Triangular pnoise"
-  :size [600 920]
+  :size [960 355]
   :setup setup
   )
 

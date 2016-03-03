@@ -102,17 +102,17 @@
         ;(q/stroke 0)
         (cond
          (odd? index) (do
-                        (q/stroke 360)
+                        ;(q/stroke 360)
                         ;(q/stroke (:colorh1 out) 45 100)
-                        ;(q/stroke (q/map-range a 0 q/TWO-PI 145 190) 90 75) ;gama de verdes-turquesas
+                        (q/stroke 360 0 (q/map-range a 0 q/TWO-PI 80 100))
                         ;(q/stroke 360 100 100)  ;rojo
                         )
          (even? index)
                        (do
-                         (q/stroke 360)
+                         ;(q/stroke 360)
                          ;(q/stroke (:colorh1 out) 45 100)
                          ;(q/stroke (:colorh2 out) 45 100)
-                         ;(q/stroke (q/map-range a 0 q/TWO-PI 70 115) 71 98) ;gama de amarillos-verdosos
+                         (q/stroke 360 0 (q/map-range a 0 q/TWO-PI 40 60))
                          ;(q/stroke 0) ;negro
                          ))
 
