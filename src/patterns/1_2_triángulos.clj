@@ -19,10 +19,10 @@
         y2 (+ y (/ (* 2 h) 3))
         x3 (+ x (/ l  2))
         y3 (- y (/ h 3))
-        step (/ l 36)
+        step (/ l 72)
         n (+ 1 (/ l step))
         xs (s/range-incl 0 l step)
-        rads (map #(* 10 (q/radians %)) (range n))
+        rads (map #(* 5 (q/radians %)) (range n))
         ys (map q/sin rads)
         ;yss (map #(Math/pow % 3) ys)
         scaled-ys (map #(* 10 %) ys)
@@ -43,14 +43,14 @@
   (q/smooth))
 
 (defn draw []
-  (q/background 160 80 100)
-  (q/stroke 360)
-  (q/stroke-weight 10)
+  (q/background 360)
+  (q/stroke 180 72 74)
+  (q/stroke-weight 1)
   (q/no-fill)
 
   (let [w (q/width)
         h (q/height)
-        nx 100
+        nx 75
         ny (* nx (q/sin (/ q/PI 3)))
         l (if (= 0 (q/mouse-x)) 0.01 (q/map-range (q/mouse-x) 0 w 0 300))
         a (* l (q/sin (q/radians 60)))]
@@ -76,7 +76,7 @@
 
 
 (q/defsketch triangulos
-  :size [1000 1000]
+  :size [1400 1000]
   :setup setup
   :draw draw
   :key-pressed key-pressed)
